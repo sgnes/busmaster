@@ -101,6 +101,10 @@ void CTxMsgDetailsView::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_EDIT_DB3, m_odDB3);
     DDX_Control(pDX, IDC_EDIT_DB2, m_odDB2);
     DDX_Control(pDX, IDC_EDIT_DB1, m_odDB1);
+    DDX_Control(pDX, IDC_COMBO_ChkSumType, m_omChkSumType);
+    DDX_Control(pDX, IDC_EDIT_ChkSumByte, m_odChkSumByte);
+    DDX_Control(pDX, IDC_EDIT_RollCntStartBit, m_odRollCntStBit);
+    DDX_Control(pDX, IDC_EDIT_RollCntLen, m_odRollCntLen);
     DDX_Check(pDX, IDC_CHKB_MSGTYPE_RTR, m_bIsRTR);
     DDX_CBString(pDX, IDC_COMB_MSG_ID_NAME, m_omStrMsgIDorName);
     DDX_Radio(pDX, IDC_RBTN_MSGTYPE_STD, m_nRBTNFrameFormat);

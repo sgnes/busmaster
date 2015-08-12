@@ -13,9 +13,14 @@
 #define IDR_BMP_CHECKBOX                211
 #define IDD_DLG_TX_MSG_BLOCK_DETAILS    281
 #define IDC_EDIT_SGNAME                 1000
+#define IDC_EDIT_ChkSumByte             1000
 #define IDC_SPIN_SGLENGTH               1001
+#define IDC_EDIT2                       1001
+#define IDC_EDIT_RollCntStartBit        1001
 #define IDC_SPIN_BYINDEX                1002
+#define IDC_EDIT_RollCntLen             1002
 #define IDC_EDIT_FACTOR                 1003
+#define IDC_COMBO_ChkSumType            1003
 #define IDC_EDIT_UNIT                   1004
 #define IDC_EDIT_MAX                    1005
 #define IDC_EDIT_MIN                    1006
@@ -70,6 +75,7 @@
 #define IDC_EDIT_TRG_TIME_VAL           1134
 #define IDC_EDIT_TRG_KEY_VAL            1137
 #define IDC_STAT_UNIT_MS                1160
+#define IDC_STAT_UNIT_MS3               1161
 #define IDC_RBTN_MSGTYPE_EXTD           1213
 #define IDC_RBTN_MSGTYPE_STD            1215
 #define IDC_CHKB_MSGTYPE_RTR            1216
@@ -91,10 +97,6 @@
 #define IDC_GROUPBOX_TRIGGER            1287
 #define IDC_RADIO_INTEL                 1306
 #define IDC_RADIO_MOTOROLA              1307
-#define IDC_COMBO_ChkSumType            1401
-#define IDC_EDIT_ChkSumByte             1402
-#define IDC_EDIT_RollCntStartBit        1403
-#define IDC_EDIT_RollCntLen             1404
 #define IDI_ICO_SEND                    17000
 #define IDI_ICO_SEND_MSG                17000
 #define IDC_CHECK_AUTO_UPDATE           17000
@@ -107,3 +109,14 @@
 #define IDM_DELETE_SEL_MSG              32892
 #define IDM_SEND_SEL_MSG                32897
 #define IDM_DELETE_ALL_MSG              32944
+
+// Next default values for new objects
+// 
+#ifdef APSTUDIO_INVOKED
+#ifndef APSTUDIO_READONLY_SYMBOLS
+#define _APS_NEXT_RESOURCE_VALUE        101
+#define _APS_NEXT_COMMAND_VALUE         40001
+#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_SYMED_VALUE           101
+#endif
+#endif

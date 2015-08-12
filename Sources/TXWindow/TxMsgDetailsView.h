@@ -51,6 +51,10 @@ public:
     CRadixEdit m_odDB3;
     CRadixEdit m_odDB2;
     CRadixEdit m_odDB1;
+    CComboBox m_omChkSumType;
+    CRadixEdit m_odChkSumByte;
+    CRadixEdit m_odRollCntStBit;
+    CRadixEdit m_odRollCntLen;
     BOOL m_bIsRTR;
     CString m_omStrMsgIDorName;
     int m_nRBTNFrameFormat;
