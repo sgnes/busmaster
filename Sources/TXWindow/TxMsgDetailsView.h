@@ -51,10 +51,11 @@ public:
     CRadixEdit m_odDB3;
     CRadixEdit m_odDB2;
     CRadixEdit m_odDB1;
-    CComboBox m_omChkSumType;
-    CRadixEdit m_odChkSumByte;
-    CRadixEdit m_odRollCntStBit;
-    CRadixEdit m_odRollCntLen;
+	CRadixEdit m_omRollsb;
+	CRadixEdit m_omRollmax;
+	CRadixEdit m_chsumbyte;
+	CComboBox  m_omCheckSumType;
+	CButton	   m_enRollChk;
     BOOL m_bIsRTR;
     CString m_omStrMsgIDorName;
     int m_nRBTNFrameFormat;
@@ -72,7 +73,7 @@ public:
      * and update the details into the controls below the
      * message frame list.
      */
-    void vSetValues(STXCANMSGDETAILS* psTxMsg);
+    void vSetValues(PSTXCANMSGLIST psTxMsgList);
 
     /**
      * @brief To Disable signal values list control
@@ -332,6 +333,16 @@ private:
      */
     BOOL bUpdateMessageDetail(STCAN_MSG* psMsgDetails);
 
+
+	/**
+     * @brief To update message rolling counter and checksum from the user entered values
+     *
+     * This function will update message rolling counter and checksum from the
+     * control.
+     *
+     * @return TRUE or FALSE
+     */
+	BOOL bUpdateMessageRollCntCheckSum();
     /**
      * @brief To get Message ID from Message ID/ Name combobox
      *
@@ -527,4 +538,7 @@ private:
     void vSetDefaultValues();
 
     void vUpdateSignalMatrix(void);
+public:
+	afx_msg void OnBnClickedCheckEnrollcheck();
+	afx_msg void OnCbnSelchangeComboChecksumType();
 };

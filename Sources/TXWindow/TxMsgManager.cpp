@@ -35,7 +35,7 @@
 
 /** CLient Id from the DIL */
 static DWORD g_dwClientID = 0;
-
+extern void updateRollingCntCheckSum(PSTXCANMSGLIST  psTxMsgList);
 /** DIL Interface */
 static CBaseDIL_CAN* g_pouDIL_CAN_Interface = nullptr;
 
@@ -694,6 +694,7 @@ UINT CTxMsgManager::s_unSendMsgBlockOnTime(LPVOID pParam )
                     break;
                 }
 
+				updateRollingCntCheckSum(psTxMsgList);
                 //WaitForSingleObject(psTxMsg->m_hSemaphore, INFINITE);
                 // Use HIL Function to send CAN Message
                 int nRet = g_pouDIL_CAN_Interface->DILC_SendMsg(g_dwClientID,

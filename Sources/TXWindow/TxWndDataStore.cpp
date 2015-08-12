@@ -465,6 +465,12 @@ bool CTxWndDataStore::bCopyMsgList(PSTXCANMSGLIST&  ppsDestTxCANMsgList , PSTXCA
         memcpy(&(psDestTxCANMsgList->m_sTxMsgDetails), &(psSrcTxCANMsgList->m_sTxMsgDetails),
                sizeof(STXCANMSGDETAILS));
         psDestTxCANMsgList->m_unIndex = psSrcTxCANMsgList->m_unIndex;
+		psDestTxCANMsgList->m_bEnRollCntCheck = psSrcTxCANMsgList->m_bEnRollCntCheck;
+		psDestTxCANMsgList->m_checkSumByte = psSrcTxCANMsgList->m_checkSumByte;
+		psDestTxCANMsgList->m_checkSumType = psSrcTxCANMsgList->m_checkSumType;
+		psDestTxCANMsgList->m_rollCntMax = psSrcTxCANMsgList->m_rollCntMax;
+		psDestTxCANMsgList->m_rollCntStartBit = psSrcTxCANMsgList->m_rollCntStartBit;
+		psDestTxCANMsgList->m_checkSumType = psSrcTxCANMsgList->m_checkSumType;
         psSrcTxCANMsgList->m_bModified = false;
         psSrcTxCANMsgList     = psSrcTxCANMsgList->m_psNextMsgDetails;
         //store the previous message so that we can provide the link to the next message
@@ -488,6 +494,12 @@ bool CTxWndDataStore::bCopyMsgList(PSTXCANMSGLIST&  ppsDestTxCANMsgList , PSTXCA
         memcpy(&(psDestTxCANMsgList->m_sTxMsgDetails), &(psSrcTxCANMsgList->m_sTxMsgDetails),
                sizeof(STXCANMSGDETAILS));
         psDestTxCANMsgList->m_unIndex = psSrcTxCANMsgList->m_unIndex;
+		psDestTxCANMsgList->m_bEnRollCntCheck = psSrcTxCANMsgList->m_bEnRollCntCheck;
+		psDestTxCANMsgList->m_checkSumByte = psSrcTxCANMsgList->m_checkSumByte;
+		psDestTxCANMsgList->m_checkSumType = psSrcTxCANMsgList->m_checkSumType;
+		psDestTxCANMsgList->m_rollCntMax = psSrcTxCANMsgList->m_rollCntMax;
+		psDestTxCANMsgList->m_rollCntStartBit = psSrcTxCANMsgList->m_rollCntStartBit;
+		psDestTxCANMsgList->m_checkSumType = psSrcTxCANMsgList->m_checkSumType;
         psPrevTxCANMsgList->m_psNextMsgDetails= psDestTxCANMsgList;
         psSrcTxCANMsgList = psSrcTxCANMsgList->m_psNextMsgDetails;
         psDestTxCANMsgList->m_psNextMsgDetails = nullptr;

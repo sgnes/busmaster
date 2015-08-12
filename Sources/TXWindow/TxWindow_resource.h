@@ -12,6 +12,13 @@
 #define IDR_BMP_MSG_SIG_WATCH           203
 #define IDR_BMP_CHECKBOX                211
 #define IDD_DLG_TX_MSG_BLOCK_DETAILS    281
+
+#define IDC_COMBO_CHECKSUM_TYPE         1995
+#define IDC_EDIT_ROLL_STARTBIT          1996
+#define IDC_CHECK_ENROLLCHECK           1997
+#define IDC_EDIT_ROLL_MAX               1999
+#define IDC_EDIT_CHECKSUM_BYTE          2000
+
 #define IDC_EDIT_SGNAME                 1000
 #define IDC_SPIN_SGLENGTH               1001
 #define IDC_SPIN_BYINDEX                1002
@@ -41,6 +48,7 @@
 #define IDC_STAT_TYPE                   1030
 #define IDC_STAT_OFFSET                 1031
 #define IDC_EDIT_OFFSET                 1032
+#define IDC_EDIT_FACTOR                 1033
 #define IDC_STAT_8                      1057
 #define IDC_STAT_7                      1065
 #define IDC_STAT_6                      1066
@@ -91,10 +99,6 @@
 #define IDC_GROUPBOX_TRIGGER            1287
 #define IDC_RADIO_INTEL                 1306
 #define IDC_RADIO_MOTOROLA              1307
-#define IDC_COMBO_ChkSumType            1401
-#define IDC_EDIT_ChkSumByte             1402
-#define IDC_EDIT_RollCntStartBit        1403
-#define IDC_EDIT_RollCntLen             1404
 #define IDI_ICO_SEND                    17000
 #define IDI_ICO_SEND_MSG                17000
 #define IDC_CHECK_AUTO_UPDATE           17000

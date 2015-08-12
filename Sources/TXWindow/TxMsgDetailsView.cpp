@@ -46,6 +46,12 @@
 #define defIMAGE_DIRTY 2
 #define defIMAGE_GOOD  0
 
+#define MAXCHECKSUMTYPE	2
+const char checkSumTypeDef[5][10]= {
+	{"Add"},
+	{"XOR"}
+};
+
 /** Message name with ID attached in it MsgName[0xMsgID] */
 UINT unGetMsgIDFromName(CString omMsgName)
 {
@@ -101,10 +107,11 @@ void CTxMsgDetailsView::DoDataExchange(CDataExchange* pDX)
     DDX_Control(pDX, IDC_EDIT_DB3, m_odDB3);
     DDX_Control(pDX, IDC_EDIT_DB2, m_odDB2);
     DDX_Control(pDX, IDC_EDIT_DB1, m_odDB1);
-    DDX_Control(pDX, IDC_COMBO_ChkSumType, m_omChkSumType);
-    DDX_Control(pDX, IDC_EDIT_ChkSumByte, m_odChkSumByte);
-    DDX_Control(pDX, IDC_EDIT_RollCntStartBit, m_odRollCntStBit);
-    DDX_Control(pDX, IDC_EDIT_RollCntLen, m_odRollCntLen);
+	DDX_Control(pDX, IDC_EDIT_ROLL_STARTBIT, m_omRollsb);
+	DDX_Control(pDX, IDC_EDIT_ROLL_MAX, m_omRollmax);
+	DDX_Control(pDX, IDC_EDIT_CHECKSUM_BYTE, m_chsumbyte);
+	DDX_Control(pDX, IDC_COMBO_CHECKSUM_TYPE, m_omCheckSumType);
+	DDX_Control(pDX, IDC_CHECK_ENROLLCHECK, m_enRollChk);
     DDX_Check(pDX, IDC_CHKB_MSGTYPE_RTR, m_bIsRTR);
     DDX_CBString(pDX, IDC_COMB_MSG_ID_NAME, m_omStrMsgIDorName);
     DDX_Radio(pDX, IDC_RBTN_MSGTYPE_STD, m_nRBTNFrameFormat);
@@ -127,6 +134,10 @@ BEGIN_MESSAGE_MAP(CTxMsgDetailsView, CFormView)
     ON_EN_UPDATE(IDC_EDIT_DB6, OnUpdateEditDataBytes)
     ON_EN_UPDATE(IDC_EDIT_DB7, OnUpdateEditDataBytes)
     ON_EN_UPDATE(IDC_EDIT_DB8, OnUpdateEditDataBytes)
+	ON_EN_UPDATE(IDC_EDIT_ROLL_STARTBIT, OnUpdateEditDataBytes)
+	ON_EN_UPDATE(IDC_EDIT_ROLL_MAX, OnUpdateEditDataBytes)
+	ON_EN_UPDATE(IDC_EDIT_CHECKSUM_BYTE, OnUpdateEditDataBytes)
+	ON_EN_UPDATE(IDC_CHECK_ENROLLCHECK, OnUpdateEditDataBytes)
     ON_BN_CLICKED(IDC_RBTN_MSGTYPE_EXTD, OnRbtnMsgtypeStd)
     ON_CBN_SELCHANGE(IDC_COMB_CHANNEL_ID, OnSelchangeCombChannelId)
     ON_EN_KILLFOCUS(IDC_EDIT_DLC, vAutoUpdateModifyChanges)
@@ -138,6 +149,8 @@ BEGIN_MESSAGE_MAP(CTxMsgDetailsView, CFormView)
     ON_EN_KILLFOCUS(IDC_EDIT_DB6, vAutoUpdateModifyChanges)
     ON_EN_KILLFOCUS(IDC_EDIT_DB7, vAutoUpdateModifyChanges)
     ON_EN_KILLFOCUS(IDC_EDIT_DB8, vAutoUpdateModifyChanges)
+	ON_BN_CLICKED(IDC_CHECK_ENROLLCHECK, OnBnClickedCheckEnrollcheck)
+	ON_CBN_SELCHANGE(IDC_COMBO_CHECKSUM_TYPE, OnCbnSelchangeComboChecksumType)
 END_MESSAGE_MAP()
 
 void CTxMsgDetailsView::OnInitialUpdate()
@@ -249,6 +262,9 @@ void CTxMsgDetailsView::vSetControlProperties()
     m_odDB6.vSetBase(nTempBase);
     m_odDB7.vSetBase(nTempBase);
     m_odDB8.vSetBase(nTempBase);
+	//m_omRollsb.vSetBase(nTempBase);
+	m_omRollmax.vSetBase(nTempBase);
+	m_chsumbyte.vSetBase(nTempBase);
 
     // Base for DLC
     m_odDLC.vSetBase(BASE_DECIMAL);
@@ -265,6 +281,9 @@ void CTxMsgDetailsView::vSetControlProperties()
     m_odDB6.SetLimitText(unNumberOfChars);
     m_odDB7.SetLimitText(unNumberOfChars);
     m_odDB8.SetLimitText(unNumberOfChars);
+	m_omRollsb.SetLimitText(unNumberOfChars);
+	m_omRollmax.SetLimitText(unNumberOfChars);
+	m_chsumbyte.SetLimitText(unNumberOfChars);
 
     // Set all the edit controls
     // to accept unsigned numbers
@@ -278,6 +297,20 @@ void CTxMsgDetailsView::vSetControlProperties()
     m_odDB6.vSetSigned( FALSE );
     m_odDB7.vSetSigned( FALSE );
     m_odDB8.vSetSigned( FALSE );
+	//m_omRollsb.vSetSigned(FALSE);
+	m_omRollmax.vSetSigned(FALSE);
+	m_chsumbyte.vSetSigned(FALSE);
+	if (m_omCheckSumType.GetCount() == 0)
+	{	
+		for (int i=0; i < MAXCHECKSUMTYPE; i++)
+		{
+			m_omCheckSumType.AddString(_T(checkSumTypeDef[i]));
+		}
+	}
+
+	//m_omCheckSumType.set
+	//m_omCheckSumType.SetCueBanner(_T("Select an item..."));
+	
 }
 
 void CTxMsgDetailsView::vInitSignalListCtrl()
@@ -589,7 +622,72 @@ BOOL CTxMsgDetailsView::bUpdateMessageDetail(STCAN_MSG* psMsgDetails)
     psMsgDetails->m_ucChannel = (UCHAR)m_omComboChannelID.GetCurSel() + 1;
     return bReturn;
 }
+BOOL CTxMsgDetailsView::bUpdateMessageRollCntCheckSum(void)
+{
 
+	//update the global list for storing the changed data******************
+	//int             nCurrentIndex = -1;
+	int startbit,rollmax,checkbyte;
+	CTxMsgBlocksView* pomBlockView = nullptr;
+	CTxMsgListView* pomListView = nullptr;
+	pomBlockView = (CTxMsgBlocksView*)pomGetBlocksViewPointer();
+	pomListView = (CTxMsgListView* )pomGetListViewPointer();
+
+	PSMSGBLOCKLIST psMsgCurrentBlock = nullptr;
+	// Get current block pointer
+	psMsgCurrentBlock =
+		pomBlockView->psGetMsgBlockPointer(
+		pomBlockView->m_nSelectedMsgBlockIndex,
+		pomBlockView->m_psMsgBlockList );
+
+	if(psMsgCurrentBlock != nullptr)
+	{
+		PSTXCANMSGLIST pCanMsgList = psMsgCurrentBlock->m_psTxCANMsgList;
+
+		pCanMsgList =  pomListView->psGetMsgDetailPointer(
+			pomListView->m_nSelectedMsgIndex, psMsgCurrentBlock);
+		if(pCanMsgList != nullptr)
+		{
+			CString str;
+			startbit = static_cast<UCHAR>(m_omRollsb.lGetValue());
+			rollmax = static_cast<UCHAR>(m_omRollmax.lGetValue());
+			checkbyte = static_cast<UCHAR>(m_chsumbyte.lGetValue());
+#if 1
+			if (checkbyte > 7 || checkbyte < 0)
+			{
+				AfxMessageBox("The checksum byte must between 0-7,check your input!");
+				checkbyte = 7;
+			}
+			if((startbit) > 63 || startbit < 0)
+			{
+				AfxMessageBox("The rolling counter start bit must between 0-63,check your input!");
+				startbit = 0;
+			}
+			int i = rollmax;
+			int rollneddbits = 0,rollavailbits=0;
+			while (i)
+			{
+				i = i>>1;
+				rollneddbits++;
+			}
+			rollavailbits = (startbit >= 8)?(8-(startbit%8)):9-startbit;
+			if(rollneddbits > rollavailbits )
+			{
+				
+				AfxMessageBox("The rolling counter max is too big for the start bit!");
+				rollmax = 0;
+			}
+#endif
+			pCanMsgList->m_bModified = true;
+			pCanMsgList->m_rollCntStartBit = startbit;
+			pCanMsgList->m_rollCntMax = rollmax;
+			pCanMsgList->m_checkSumByte = checkbyte;
+			pCanMsgList->m_checkSumType = m_omCheckSumType.GetCurSel();
+			pCanMsgList->m_bEnRollCntCheck = m_enRollChk.GetCheck();
+		}
+	}
+	return TRUE;
+}
 BOOL CTxMsgDetailsView::bUpdateSignalList(STCAN_MSG sMsg)
 {
     CMsgSignal* podDatabase = nullptr;
@@ -1756,6 +1854,11 @@ void CTxMsgDetailsView::OnUpdateEditDataBytes()
                 bSetStatusText("");
             }
         }
+		else if ( (unID >= IDC_EDIT_ROLL_STARTBIT && unID <= IDC_EDIT_CHECKSUM_BYTE))
+		{
+			bUpdateMessageRollCntCheckSum();
+		}
+		
     }
 }
 
@@ -2654,15 +2757,16 @@ void CTxMsgDetailsView::vUpdateStateDataBytes()
     m_odDB8.SetReadOnly(dlc < 8);
 }
 
-void CTxMsgDetailsView::vSetValues(STXCANMSGDETAILS* psTxMsg)
+void CTxMsgDetailsView::vSetValues(PSTXCANMSGLIST psTxMsgList)
 {
     CString omStr            = "";
     CString omFormat         = "";
     CString omStrFormatData  = "";
 
+	STXCANMSGDETAILS* psTxMsg = &(psTxMsgList->m_sTxMsgDetails);
     // If the pointer is null
     // then clear the contents of all the undefined msg controls
-    if ( psTxMsg != nullptr)
+    if ( psTxMsgList != nullptr)
     {
         if( TRUE == CTxMsgManager::s_TxFlags.nGetFlagStatus(TX_HEX))
         {
@@ -2727,6 +2831,33 @@ void CTxMsgDetailsView::vSetValues(STXCANMSGDETAILS* psTxMsg)
                 pEdit->SetWindowText(omStr);
             }
         }
+		//if (m_enRollChk.GetCheck())
+		{
+			pEdit = (CEdit*)GetDlgItem(IDC_EDIT_ROLL_STARTBIT);
+			if (pEdit != nullptr)
+			{
+				omStr.Format(omStrFormatData, psTxMsgList->m_rollCntStartBit);
+				pEdit->SetWindowText(omStr);
+			}
+			pEdit = (CEdit*)GetDlgItem(IDC_EDIT_ROLL_MAX);
+			if (pEdit != nullptr)
+			{
+				omStr.Format(omStrFormatData, psTxMsgList->m_rollCntMax);
+				pEdit->SetWindowText(omStr);
+			}
+			pEdit = (CEdit*)GetDlgItem(IDC_EDIT_CHECKSUM_BYTE);
+			if (pEdit != nullptr)
+			{
+				omStr.Format(omStrFormatData, psTxMsgList->m_checkSumByte);
+				pEdit->SetWindowText(omStr);
+			}
+			m_omCheckSumType.SetCurSel(psTxMsgList->m_checkSumType);
+			m_enRollChk.SetCheck(psTxMsgList->m_bEnRollCntCheck);
+		}
+		
+
+		
+		
         // check the message type selected.
         if(psTxMsg->m_sTxMsg.m_ucRTR == TRUE)
         {
@@ -2942,4 +3073,18 @@ void CTxMsgDetailsView::vAutoUpdateModifyChanges()
     {
         vCallApplyChanges();
     }
+}
+
+
+void CTxMsgDetailsView::OnBnClickedCheckEnrollcheck()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	bUpdateMessageRollCntCheckSum();
+}
+
+
+void CTxMsgDetailsView::OnCbnSelchangeComboChecksumType()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	bUpdateMessageRollCntCheckSum();
 }

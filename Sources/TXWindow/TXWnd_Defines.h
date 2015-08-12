@@ -53,14 +53,23 @@ typedef sTXCANMSGDETAILS* PSTXCANMSGDETAILS;
 struct sTXCANMSGLIST
 {
     bool        m_bModified;
+	bool		m_bEnRollCntCheck;
     UINT        m_unIndex;
     STXCANMSGDETAILS m_sTxMsgDetails;
     struct sTXCANMSGLIST* m_psNextMsgDetails;
+	int			m_rollCntStartBit;
+	int			m_rollCntMax;
+	int			m_checkSumByte;
+	int			m_checkSumType;
     sTXCANMSGLIST()
     {
         m_bModified         = false;
+		m_bEnRollCntCheck	= false;
         m_unIndex           = 0;
         m_psNextMsgDetails = nullptr;
+		m_rollCntStartBit	= 0;
+		m_rollCntMax		= 0;
+		m_checkSumByte		= 0;
     }
 };
 typedef sTXCANMSGLIST STXCANMSGLIST;

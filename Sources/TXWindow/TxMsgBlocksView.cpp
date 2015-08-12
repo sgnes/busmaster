@@ -1624,6 +1624,11 @@ void CTxMsgBlocksView::vEnableControls(BOOL bEnable)
         pomDetailsView->m_odDB3.EnableWindow(bEnable);
         pomDetailsView->m_odDB2.EnableWindow(bEnable);
         pomDetailsView->m_odDB1.EnableWindow(bEnable);
+		pomDetailsView->m_omRollsb.EnableWindow(bEnable);
+		pomDetailsView->m_omRollmax.EnableWindow(bEnable);
+		pomDetailsView->m_chsumbyte.EnableWindow(bEnable);
+		pomDetailsView->m_omCheckSumType.EnableWindow(bEnable);
+
         // Enable / Disable Channel ID
         pomDetailsView->m_omComboChannelID.EnableWindow(bEnable);
         // Include Standard/Extended radion and RTR checkbox

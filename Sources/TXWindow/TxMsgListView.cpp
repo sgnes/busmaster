@@ -37,6 +37,7 @@
 
 /** For global stop flag for Message Transmission */
 extern BOOL g_bStopSelectedMsgTx;
+void updateRollingCntCheckSum(PSTXCANMSGLIST  psTxMsgList);
 
 IMPLEMENT_DYNCREATE(CTxMsgListView, CFormView)
 
@@ -381,7 +382,7 @@ void CTxMsgListView::OnItemchangedLstcMsgDetails(NMHDR* pNMHDR,
                                                pomGetDetailsViewPointer();
                     if( pView != nullptr )
                     {
-                        pView->vSetValues(&(psTxMsgList->m_sTxMsgDetails));
+                        pView->vSetValues((psTxMsgList));
                         // Insert Signal List Update Code Here
                         pView->bUpdateSignalList(
                             psTxMsgList->m_sTxMsgDetails.m_sTxMsg );
@@ -639,6 +640,7 @@ void CTxMsgListView::OnSendSelectedMsg()
                                 psTxMsgList = psGetMsgDetailPointer (
                                                   nCurrentIndex,
                                                   psMsgBlock );
+								updateRollingCntCheckSum(psTxMsgList);
                                 if(psTxMsgList != nullptr )
                                 {
                                     memcpy( &(psTxCanMsg->m_psTxMsg[i]),
@@ -678,7 +680,74 @@ void CTxMsgListView::OnSendSelectedMsg()
         }
     }
 }
+void updateRollingCntCheckSum(PSTXCANMSGLIST  psTxMsgList)
+{
+	unsigned char tmp,m(0),k(0);
+	int startbit(0), rlmax(0), checkbyte(0),roolcnt(0),checksum(0),i(0),j(0),s(0),rlbs(0); 
+#if 0
+	CTxMsgDetailsView* pomDetailsView = nullptr;
 
+	if (psTxMsgList == nullptr)
+	{
+		return;
+	}
+	pomDetailsView = ( CTxMsgDetailsView* )pomGetDetailsViewPointer();
+	if (pomDetailsView!= nullptr && !(pomDetailsView->m_enRollChk.GetCheck()))
+	{
+		return;
+	}
+#endif
+	if (!psTxMsgList->m_bEnRollCntCheck)
+	{
+		return;
+	}
+	rlmax = psTxMsgList->m_rollCntMax;
+	s = psTxMsgList->m_rollCntStartBit;
+	i = rlmax;
+	if (rlmax > 0)
+	{
+		while (i)
+		{
+			i = i >> 1;
+			rlbs++;
+			k = 1 << rlbs;
+		}
+		j = (s%8);
+		for(i=(s%8)+ rlbs -1;i>=s%8;i--)
+		{
+			m |= (1<<(i));
+		}
+		tmp = (psTxMsgList->m_sTxMsgDetails.m_sTxMsg.m_ucData[s/8]);
+		roolcnt = tmp & m;
+		roolcnt = roolcnt >> (s%8);
+		if(roolcnt++ >= rlmax)
+		{
+			roolcnt = 0;
+		}
+		roolcnt = roolcnt << (s%8);
+		k = ~m; 
+		tmp &= k; 
+		tmp |= roolcnt;
+		psTxMsgList->m_sTxMsgDetails.m_sTxMsg.m_ucData[s/8] = tmp;
+	}
+	checkbyte = psTxMsgList->m_checkSumByte;
+	for(int i = 0; i < 8; i++)
+	{
+		if (i == checkbyte)
+		{
+			continue;
+		}
+		if ((psTxMsgList->m_checkSumType == 0) || (psTxMsgList->m_checkSumType == 1))
+		{
+			checksum += psTxMsgList->m_sTxMsgDetails.m_sTxMsg.m_ucData[i];
+		} 
+	}
+	if(psTxMsgList->m_checkSumType == 1)
+	{
+		checksum ^= 0xff;
+	}
+	psTxMsgList->m_sTxMsgDetails.m_sTxMsg.m_ucData[checkbyte] = checksum;
+}
 void CTxMsgListView::OnDeleteSelectedMsg()
 {
     CTxMsgBlocksView* pomBlocksView = nullptr;

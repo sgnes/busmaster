@@ -14,16 +14,23 @@
 #define IDD_DLG_TX_MSG_BLOCK_DETAILS    281
 #define IDC_EDIT_SGNAME                 1000
 #define IDC_EDIT_ChkSumByte             1000
+
 #define IDC_SPIN_SGLENGTH               1001
 #define IDC_EDIT2                       1001
 #define IDC_EDIT_RollCntStartBit        1001
 #define IDC_SPIN_BYINDEX                1002
-#define IDC_EDIT_RollCntLen             1002
-#define IDC_EDIT_FACTOR                 1003
+
+#define IDC_COMBO_CHECKSUM_TYPE         1995
+#define IDC_EDIT_ROLL_STARTBIT          1996
+#define IDC_CHECK_ENROLLCHECK           1997
+#define IDC_EDIT_ROLL_MAX               1999
+#define IDC_EDIT_CHECKSUM_BYTE          2000
+
 #define IDC_COMBO_ChkSumType            1003
 #define IDC_EDIT_UNIT                   1004
 #define IDC_EDIT_MAX                    1005
 #define IDC_EDIT_MIN                    1006
+
 #define IDC_RADIOCYCLIC                 1007
 #define IDC_SPIN_BIT                    1008
 #define IDC_RADIOMONOSHOT               1009
@@ -46,6 +53,7 @@
 #define IDC_STAT_TYPE                   1030
 #define IDC_STAT_OFFSET                 1031
 #define IDC_EDIT_OFFSET                 1032
+#define IDC_EDIT_FACTOR                 1033
 #define IDC_STAT_8                      1057
 #define IDC_STAT_7                      1065
 #define IDC_STAT_6                      1066
