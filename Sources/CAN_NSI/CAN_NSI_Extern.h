@@ -35,13 +35,17 @@
 #endif
 
 
+#if 0
 #ifdef __cplusplus
 extern "C" {  // only need to export C interface if used by C++ source code
+#endif
 #endif
 
     /*  Exported function list */
     USAGEMODE HRESULT GetIDIL_CAN_Controller(void** ppvInterface);
+#if 0
 
 #ifdef __cplusplus
 }
+#endif
 #endif

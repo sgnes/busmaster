@@ -306,7 +306,7 @@ BOOL bIsModeMismatch( std::ifstream& omInReplayFile,
     CString omStrLine;
     BOOL bLogModeChecked = FALSE;
     BOOL bReplayMsgTypeChecked = FALSE;
-    if(omInReplayFile != nullptr)
+    if(omInReplayFile.good())
     {
         while( bLine &&  ! omInReplayFile.eof())
         {

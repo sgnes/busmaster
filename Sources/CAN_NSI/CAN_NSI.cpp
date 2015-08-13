@@ -39,7 +39,7 @@
 #include "ChangeRegisters.h"
 #include "../Application/MultiLanguage.h"
 #include "EXTERNAL/NSI/Canpcex.h"
-
+#include "EXTERNAL/NSI/candefex.h"
 #define USAGE_EXPORT
 #include "CAN_NSI_Extern.h"
 

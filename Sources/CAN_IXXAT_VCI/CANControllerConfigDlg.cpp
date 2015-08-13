@@ -24,7 +24,7 @@
 
 #include "CAN_IXXAT_VCI_stdafx.h"
 #include "CAN_IXXAT_VCI.h"
-#include "vcinpl.h"
+#include "EXternal\inc\vcinpl.h"
 #include "CANControllerConfigDlg.h"
 #include "Utility/MultiLanguageSupport.h"
 

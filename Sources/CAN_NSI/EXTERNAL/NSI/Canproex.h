@@ -27,13 +27,14 @@ Ce fichier contient les definitions :
 
   MISE EN GARDE IMPORTANTE : Il faut s'assurer que le symbole
   _CANAPI est correctement défini dans le fichier CANPCEX.H pour
-  le compilateur utilisé. Ce symbole spécifie que les fonctions
+  le compilateur utilis? Ce symbole spécifie que les fonctions
   doivent être importées d'une DLL et qu'elles utilisent la
   convention d'appel C.
 
   Si cette directive n'est pas appliquée, LES FONCTIONS DE
   L'INTERFACE LOGICIELLE NE FONCTIONNERONT PAS CORRECTEMENT.
 */
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {

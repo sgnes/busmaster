@@ -46,7 +46,7 @@ Ce fichier contient les definitions :
   - Des codes de retour des fonction de l'interface CAN.
 
   MISE EN GARDE IMPORTANTE : Il faut s'assurer que le compilateur
-  utilisé peut appliquer la directive d'alignement des champs
+  utilis?peut appliquer la directive d'alignement des champs
   des structures de données suivante:
     #pragma pack(push,2)
   Ceci peut changer la taille des structures et la position
@@ -63,12 +63,12 @@ Ce fichier contient les definitions :
    necessary.
 
    Cette directive indique que les champs des structures de
-   données doivent tous commencer à des addresses paires.
+   données doivent tous commencer ?des addresses paires.
    NE PAS SUPPRIMER. Cette syntaxe est specifique aux
    compilateurs Microsoft. Faire les changements nécessaires
    pour d'autres compilateurs.
 */
-
+#pragma once
 #pragma pack(push,2)
 
 /*
@@ -481,9 +481,7 @@ typedef struct
     unsigned short  reserved1;
     unsigned short  id4_0;
     unsigned short  id12_5;
-    unsigned short  empty_0;        // reservé
-    unsigned short  empty_1;        // reservé
-    unsigned short  act_err;
+    unsigned short  empty_0;        // reserv?    unsigned short  empty_1;        // reserv?    unsigned short  act_err;
     unsigned short  interm;
     unsigned short  tolerate_dom;
     unsigned short  pas_err;
@@ -528,32 +526,31 @@ typedef struct
             short           deviceID;               //DeviceID
             char            productName[40];        //Nom produit
             char            manufacturerName[40];   //Fabricant
-            char            serialNumber[80];       //N° de série
+            char            serialNumber[80];       //N?de série
             short           firmwareVersion;        //Version
             unsigned long   boardType;              //Type de carte
-            unsigned long   reserved;               //Réservé
-            unsigned long   hardwareVersion;        //Version harware
+            unsigned long   reserved;               //Réserv?            unsigned long   hardwareVersion;        //Version harware
         } CAN_USB;
         struct
         {
-            unsigned long   IOBaseAddress[4];       //Adresse IO
-            unsigned long   memoryBaseAddress[3];   //Mémoire de base
-            unsigned long   IRQLineNumber;          //N° IRQ
-            unsigned long   boardType;              //Type de carte
-            char            cardName[80];           //Nom de carte
-            unsigned long   reserved1;              //Réservé
-            unsigned long   reserved2;              //Réservé
+           unsigned long   IOBaseAddress[4];       //Adresse IO
+           unsigned long   memoryBaseAddress[3];   //Mémoire de base
+           unsigned long   IRQLineNumber;          //N?IRQ
+           unsigned long   boardType;              //Type de carte
+           char            cardName[80];           //Nom de carte
+           unsigned long   reserved1;              //Réserv?            unsigned long   reserved2;              //Réserv?        } CAN_PCI;
+            unsigned long   reserved2;              //R?serv?
         } CAN_PCI;
-        struct
-        {
-            unsigned long   IOBaseAddress[4];       //Adresse IO
-            unsigned long   IRQLineNumber;          //N° IRQ
-            unsigned long   boardType;              //Type de carte
-            char            cardName[80];           //Nom du canal
-            unsigned long   reserved1;              //Réservé
-            unsigned long   reserved2;              //Réservé
+           struct
+           {
+              unsigned long   IOBaseAddress[4];       //Adresse IO
+              unsigned long   IRQLineNumber;          //N?IRQ
+              unsigned long   boardType;              //Type de carte
+              char            cardName[80];           //Nom du canal
+              unsigned long   reserved1;              //Réserv?            unsigned long   reserved2;              //Réserv?        } CAN_ISA;
+            unsigned long   reserved2;              //R?serv?
         } CAN_ISA;
-        char    reserved[512];
+              char    reserved[512];
     };
 } t_CANdeviceInfo;
 

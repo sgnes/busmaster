@@ -17,7 +17,7 @@
 #ifndef _VCINPLDYNL_H_
 #define _VCINPLDYNL_H_
 
-#include <vcinpl.h>
+#include ".\EXTERNAL\inc\vcinpl.h"
 #include <pshpack4.h>
 
 /*****************************************************************************

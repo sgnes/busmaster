@@ -29,7 +29,7 @@
 #include "CAN_IXXAT_VCI_stdafx.h"
 #include "ClientList.h"
 #include "IxxatCanChannel.h"
-#include "vcinpl.h"
+#include "EXTERNAL\inc\vcinpl.h"
 #include <process.h> // _beginthread
 #include "vcinpldynl.h"
 

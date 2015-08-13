@@ -23,9 +23,9 @@
 //  include files
 //////////////////////////////////////////////////////////////////////////
 #ifdef VCIUSERAPP
-#include <CANtype.h>
-#include <LINtype.h>
-#include <pshpack1.h>
+#include "CANtype.h"
+#include "LINtype.h"
+#include "pshpack1.h"
 #else
 #include <XATtype_adapt.h>
 #include <CANtype.h>
