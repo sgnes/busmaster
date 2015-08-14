@@ -694,28 +694,38 @@ UINT CTxMsgManager::s_unSendMsgBlockOnTime(LPVOID pParam )
                     break;
                 }
 
-				updateRollingCntCheckSum(psTxMsgList);
-                //WaitForSingleObject(psTxMsg->m_hSemaphore, INFINITE);
-                // Use HIL Function to send CAN Message
-                int nRet = g_pouDIL_CAN_Interface->DILC_SendMsg(g_dwClientID,
-                           psTxMsgList->m_sTxMsgDetails.m_sTxMsg);
-                if (nRet != S_OK)
+                /* all the message in the same block should have the same period, not to shard the period which is set.
+                as the event is coming, all the message should be send */
+                while (psTxMsgList != nullptr)
                 {
-                    //::PostMessage(GUI_hDisplayWindow, WM_ERROR,
-                    //            ERROR_DRIVER_API_FAIL, 0);
+                   if (psTxMsgList->m_sTxMsgDetails.m_bEnabled == TRUE)
+                   {
+                      updateRollingCntCheckSum(psTxMsgList);
+                      //WaitForSingleObject(psTxMsg->m_hSemaphore, INFINITE);
+                      // Use HIL Function to send CAN Message
+                      int nRet = g_pouDIL_CAN_Interface->DILC_SendMsg(g_dwClientID,
+                         psTxMsgList->m_sTxMsgDetails.m_sTxMsg);
+                      if (nRet != S_OK)
+                      {
+                         TRACE("Tx message faild.\n");
+                      }
+                      ReleaseSemaphore(psTxMsg->m_hSemaphore, 1, lpPreviousCount);
+                   }
+                   
+                   // Select Next Message
+                   if (psTxMsgList != nullptr)
+                   {
+                      psTxMsgList = psTxMsgList->m_psNextMsgDetails;
+                   }
                 }
-                ReleaseSemaphore(psTxMsg->m_hSemaphore,1,lpPreviousCount);
+				   
             }
             else
             {
                 TRACE("Tx block stopped\n");
             }
 
-            // Select Next Message
-            if( psTxMsgList != nullptr )
-            {
-                psTxMsgList = psTxMsgList->m_psNextMsgDetails;
-            }
+
             // Set the pointer to the begining if it is the last node and
             // this is cyclic block
             if( psTxMsgList == nullptr && psTxMsg->m_bType == TRUE )
